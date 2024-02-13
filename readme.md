@@ -22,3 +22,20 @@
   - Maintain Order of messages
 
 #### zookeeper vs kraft
+
+#### Todos
+- Migrate from zookeeper to kraft
+
+#### Caveats
+- `my.first.topic` -> `my_first_topic`
+
+#### kraft setup
+- KAFKA_CLUSTER_ID="$(/bin/kafka-storage random-uuid)"
+- echo $KAFKA_CLUSTER_ID
+- /bin/kafka-storage format -t $KAFKA_CLUSTER_ID -c /etc/kafka/kraft/server.properties
+- /bin/kafka-server-start /etc/kafka/kraft/server.properties
+
+#### Assigning partitions to consumers
+- Rebalance when 
+  - new consumer joins or existing consumer leaves
+  - number of partitions changes

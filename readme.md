@@ -39,3 +39,6 @@
 - Rebalance when 
   - new consumer joins or existing consumer leaves
   - number of partitions changes
+
+#### Poision Pill
+- Messages that cannot be processed by consumer, got stuck in the queue and block other messages from being processed

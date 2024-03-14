@@ -133,7 +133,7 @@ produce_with_key:
 		--bootstrap-server kafka1:19092
 
 # viewing all existing consumer groups
-consumer_groups:
+consumer_groups_list:
 	docker exec -it kafka1 kafka-consumer-groups \
 		--list \
 		--bootstrap-server kafka1:19092
@@ -142,3 +142,9 @@ consumer_groups:
 kafka1:
 	docker exec -it kafka1 bash
 
+# open at localhost:9000 on browser
+ui:
+	open http://localhost:9000
+
+
+	

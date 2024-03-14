@@ -20,6 +20,9 @@
   - Parallelism -> high throughput -> Scalability
 - Why need message key?
   - Maintain Order of messages
+- How to replay an event that has already been acked?
+- How to query one event from kafka?
+- How to know which msg is on disk, which msg is on RAM?
 
 #### zookeeper vs kraft
 

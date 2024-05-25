@@ -97,13 +97,13 @@ type svc struct {
 
 func main() {
 	brokerAddress := []string{"localhost:9092"}
-	topic := "order.created"
+	orderCreatedtopic := "order.created"
 	groupID := "dispatch.order.created.group"
 
 	s := svc{
 		consumerHandler: NewConsumerGroupHandler(),
 	}
-	s.consumePlacedOrders(brokerAddress, topic, groupID)
+	s.consumePlacedOrders(brokerAddress, orderCreatedtopic, groupID)
 }
 
 func NewProducer(brokerAddress []string, topic string, orderID string) syncProducer {

@@ -16,7 +16,7 @@ up_broker:
 topic_create:
 	docker exec -it kafka1 kafka-topics \
 		--create \
-		--topic user.activity \
+		--topic $(topic) \
 		--partitions 3 \
 		--replication-factor 3 \
 		--if-not-exists \
@@ -28,32 +28,32 @@ topic_list:
 		--list \
 		--bootstrap-server kafka1:19092
 
-# describe a topic user.activity
+# describe a topic
 topic_describe:
 	docker exec -it kafka1 kafka-topics \
 		--describe \
-		--topic user.activity \
+		--topic $(topic) \
 		--bootstrap-server kafka1:19092
 
 # delete a topic user.activity
 topic_delete:
 	docker exec -it kafka1 kafka-topics \
 		--delete \
-		--topic user.activity \
+		--topic $(topic) \
 		--bootstrap-server kafka1:19092
 
 # increase the number of partitions of a topic by 1
 topic_more_partition:
 	docker exec -it kafka1 kafka-topics \
 		--alter \
-		--topic user.activity \
+		--topic $(topic) \
 		--partitions 4 \
 		--bootstrap-server kafka1:19092
 
 # produce message to the topic user.activity
 produce:
 	docker exec -it kafka1 kafka-console-producer \
-		--topic user.activity \
+		--topic $(topic) \
 		--bootstrap-server kafka1:19092
 
 # {"userId": "user1", "event": "login", "timestamp": "2024-02-12T10:00:00Z"}
@@ -64,7 +64,7 @@ produce:
 # each terminal is one consumer, that belongs to different consumer group
 consume:
 	docker exec -it kafka1 kafka-console-consumer \
-		--topic user.activity \
+		--topic $(topic) \
 		--from-beginning \
 		--property print.key=true \
 		--property print.partition=true \

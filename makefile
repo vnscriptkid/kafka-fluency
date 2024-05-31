@@ -146,5 +146,10 @@ kafka1:
 ui:
 	open http://localhost:9000
 
+# psql
+psql:
+	docker compose exec -it pg psql -U postgres
 
-	
+# redis-cli
+redis-cli:
+	docker compose exec -it redis redis-cli

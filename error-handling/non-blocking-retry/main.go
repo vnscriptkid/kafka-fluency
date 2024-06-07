@@ -41,7 +41,7 @@ func main() {
 	retryQueue := make(chan *kafka.Message, 100)
 
 	// Start retry handler goroutine
-	go handleRetries(retryQueue, producer)
+	go handleRetries(retryQueue, producer, consumer)
 
 	fmt.Println("Waiting for messages...")
 	for {
@@ -73,12 +73,12 @@ func processMessageContent(msg *kafka.Message) error {
 	return nil
 }
 
-func handleRetries(retryQueue chan *kafka.Message, producer *kafka.Producer) {
+func handleRetries(retryQueue chan *kafka.Message, producer *kafka.Producer, consumer *kafka.Consumer) {
 	for msg := range retryQueue {
 		go func(msg *kafka.Message) {
 			if err := processMessageWithRetry(msg, 3, 10*time.Second); err != nil {
 				fmt.Printf("Failed to process message after retries: %s. Sending to DLQ...\n", msg)
-				sendToDLQ(producer, "myDLQ", msg)
+				sendToDLQ(producer, consumer, "myDLQ", msg)
 			}
 		}(msg)
 	}
@@ -96,7 +96,7 @@ func processMessageWithRetry(msg *kafka.Message, retries int, waitTime time.Dura
 	return fmt.Errorf("failed to process message after %d retries", retries)
 }
 
-func sendToDLQ(producer *kafka.Producer, topic string, msg *kafka.Message) {
+func sendToDLQ(producer *kafka.Producer, consumer *kafka.Consumer, topic string, msg *kafka.Message) {
 	dlqMsg := &kafka.Message{
 		TopicPartition: kafka.TopicPartition{Topic: &topic, Partition: kafka.PartitionAny},
 		Value:          msg.Value,
@@ -115,6 +115,10 @@ func sendToDLQ(producer *kafka.Producer, topic string, msg *kafka.Message) {
 				fmt.Printf("Failed to send message to DLQ: %s\n", ev.TopicPartition.Error)
 			} else {
 				fmt.Printf("Message sent to DLQ: %s\n", ev.TopicPartition)
+				// Commit the message after it has been successfully sent to the DLQ
+				if _, err := consumer.CommitMessage(msg); err != nil {
+					fmt.Printf("Failed to commit message after sending to DLQ: %s\n", err)
+				}
 			}
 			return
 		}

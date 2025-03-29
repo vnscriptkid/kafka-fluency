@@ -1,5 +1,8 @@
 up:
-	docker compose up -d
+	docker compose up -d zoo1 kafka1 kafka2 kafka3 manager kafka-ui
+
+up_ksql:
+	docker compose up -d ksqldb-server ksqldb-cli schema-registry connect
 
 down:
 	docker compose down --remove-orphans --volumes
